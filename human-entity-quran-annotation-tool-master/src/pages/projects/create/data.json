@@ -1,0 +1,23 @@
+[
+    {
+        "projectName": "New RB Project",
+        "projectImage": "resources/images/projects/rb-project.png",
+        "methodName": "Create a Rule Based labeling project.",
+        "link":"/cards/basic-cards",
+        "id": 1
+    },
+    {
+        "projectName": "New HMM Project",
+        "projectImage": "resources/images/projects/hmm-project.png",
+        "methodName": "Create a Hidden Markov Model labeling project.",
+        "link": "#",
+        "id": 2
+    },
+    {
+        "projectName": "New CRF Project",
+        "projectImage": "resources/images/projects/crf-project.png",
+        "methodName": "Create a Conditional Random Fields labeling project.",
+        "link": "#",
+        "id": 3
+    }
+]

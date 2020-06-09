@@ -33,6 +33,10 @@ class Create extends React.Component {
     })
   }
 
+  createNewProject = () => {
+    fetch('http://localhost:5000/').then(res => res.json())
+  }
+
   render() {
     const { visible } = this.state
     return (
@@ -64,6 +68,7 @@ class Create extends React.Component {
                       projectImage={data.projectImage}
                       methodName={data.methodName}
                       link={data.link}
+                      click={this.createNewProject}
                       key={data.id}
                     />
                   )

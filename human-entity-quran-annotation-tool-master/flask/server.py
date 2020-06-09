@@ -10,7 +10,7 @@ import os
 from arabic_entity_classifier_using_pattern import classify, classify_suggest
 
 app = Flask(__name__)
-app.config['MONGO_URI'] = "mongodb://127.0.0.1:27017/annotation_tool"
+app.config['MONGO_URI'] = "mongodb://127.0.0.1:27017/TA"
 
 mongo = PyMongo(app)
 cors = CORS(app)
@@ -40,3 +40,8 @@ def get_surah(surah_number):
     classified_surah = dumps(classify(patterns, surah))
 
     return classified_surah
+
+@app.route('/API/new_project')
+def new_project(data):
+
+    return ""

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import style from './style.module.scss'
 
 class ButtonMethod extends React.Component {
@@ -14,11 +14,11 @@ class ButtonMethod extends React.Component {
     this.tooltip = React.createRef()
     this.myRef = null
     this.createMarkup = this.createMarkup.bind(this)
-  }
-
-  state = {
-    legend: undefined,
-    isHover: false,
+    this.state = {
+      legend: undefined,
+      isHover: false,
+      redirect: false,
+    }
   }
 
   componentDidMount() {
@@ -28,6 +28,21 @@ class ButtonMethod extends React.Component {
 
   setTextInputRef(element) {
     this.myRef = element
+  }
+
+  setRedirect = () => {
+    if (!this.link)
+      this.setState({
+        redirect: true,
+      })
+  }
+
+  renderRedirect = () => {
+    const { redirect } = this.state
+
+    if (redirect) return <Redirect to={this.link} />
+
+    return <></>
   }
 
   toggleHover = function toggleHover() {
@@ -57,34 +72,37 @@ class ButtonMethod extends React.Component {
     }
 
     return (
-      <div className="col-lg-6 col-lg-12">
-        <Link to={this.link}>
+      <div
+        className="col-lg-6 col-lg-12"
+        tabIndex="0"
+        role="button"
+        onKeyDown={this.setRedirect}
+        onClick={this.setRedirect}
+      >
+        {this.renderRedirect()}
+        <div
+          className={`card ${this.cardEffect}`}
+          onMouseEnter={this.toggleHover}
+          onMouseLeave={this.toggleHover}
+        >
           <div
-            className={`card ${this.cardEffect}`}
-            onMouseEnter={this.toggleHover}
-            onMouseLeave={this.toggleHover}
+            className="card-body"
+            onClick={this.click}
+            onKeyDown={this.click}
+            role="button"
+            tabIndex="0"
           >
-            <div
-              className="card-body"
-              onClick={this.click}
-              onKeyDown={this.click}
-              role="button"
-              tabIndex="0"
-            >
-              <div className="text-center">
-                <div className="text-dark font-size-18 font-weight-bold mb-1">
-                  {this.projectName}
-                </div>
-                <img
-                  className={`${style.itemCover} mr-3`}
-                  src={this.projectImage}
-                  alt="projects logo"
-                />
-                <div className="text-gray-6 mb-2">{this.methodName}</div>
-              </div>
+            <div className="text-center">
+              <div className="text-dark font-size-18 font-weight-bold mb-1">{this.projectName}</div>
+              <img
+                className={`${style.itemCover} mr-3`}
+                src={this.projectImage}
+                alt="projects logo"
+              />
+              <div className="text-gray-6 mb-2">{this.methodName}</div>
             </div>
           </div>
-        </Link>
+        </div>
       </div>
     )
   }

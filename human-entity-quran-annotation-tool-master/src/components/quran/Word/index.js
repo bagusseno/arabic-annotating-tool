@@ -64,9 +64,8 @@ class Word extends React.Component {
         onMouseDown={this.setMouseDownStatus.bind(this, true)}
         onMouseEnter={this.toggleHover}
         onMouseLeave={this.toggleHover}
-      >
-        {this.value}
-      </span>
+        dangerouslySetInnerHTML={{ __html: this.value }}
+      />
     )
   }
 }

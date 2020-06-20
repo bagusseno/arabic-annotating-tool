@@ -81,9 +81,12 @@ class Router extends React.Component {
           >
             <Route exact path="/" render={() => <Redirect to="projects/create" />} />
             {routes.map(({ path, Component, exact }) => (
-              <Route path={path} key={path} exact={exact}>
-                <Component />
-              </Route>
+              <Route
+                path={path}
+                key={path}
+                exact={exact}
+                render={props => <Component {...props} />}
+              />
             ))}
             <Route component={NotFoundPage} />
           </Switch>

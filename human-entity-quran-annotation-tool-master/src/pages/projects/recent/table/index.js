@@ -1,28 +1,19 @@
+/* eslint no-underscore-dangle: 0 */
 import React from 'react'
 import { Table, Divider, Tag } from 'antd'
-import data from './data.json'
+import { Link } from 'react-router-dom'
 
 const columns = [
   {
     title: 'Type',
-    dataIndex: 'name',
-    key: 'name',
+    dataIndex: 'type',
+    key: 'type',
     render: text => <a href="javascript:;">{text}</a>,
   },
   {
-    title: 'Created',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: 'Last Modified',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
     title: 'Labelers',
-    key: 'tags',
-    dataIndex: 'tags',
+    key: 'labelers',
+    dataIndex: 'labelers',
     render: tags => (
       <span>
         {tags.map(tag => {
@@ -40,20 +31,70 @@ const columns = [
     ),
   },
   {
-    title: 'Status',
+    title: 'Surah number',
+    key: 'surahNumber',
+    dataIndex: 'surahNumber',
+    render: surah => {
+      return <span>{surah}</span>
+    },
+  },
+  {
+    title: 'Action',
     key: 'action',
-    render: (text, record) => (
-      <span>
-        <a href="javascript:;">Incomplete {record.name}</a>
-        <Divider type="vertical" />
-        <a href="javascript:;">Delete</a>
-      </span>
-    ),
+    dataIndex: 'projectID',
+    render: projectID => {
+      console.log(`proj:${projectID}`)
+      return (
+        <span>
+          <Link
+            to={{
+              pathname: '/cards/basic-cards',
+              state: {
+                projectID,
+              },
+            }}
+          >
+            Open
+          </Link>
+          <Divider type="vertical" />
+          <a href="javascript:;">Delete</a>
+        </span>
+      )
+    },
   },
 ]
 
 class Recent extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      data: [],
+    }
+  }
+
+  componentDidMount() {
+    fetch('http://localhost:5000/API/get_projects')
+      .then(res => res.json())
+      .then(res => {
+        const data = []
+        res.forEach((e, k) => {
+          data.push({
+            key: k,
+            type: e.projectType,
+            labelers: [e.projectAnnotator],
+            surahNumber: e.surahNumber,
+            projectID: e._id.$oid,
+          })
+        })
+
+        this.setState({
+          data,
+        })
+      })
+  }
+
   render() {
+    const { data } = this.state
     return (
       <div className="mb-4 air__utils__scrollTable">
         <Table columns={columns} dataSource={data} scroll={{ x: '100%' }} />

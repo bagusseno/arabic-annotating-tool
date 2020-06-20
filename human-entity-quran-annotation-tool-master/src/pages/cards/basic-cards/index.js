@@ -1,24 +1,37 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import { Select, Checkbox } from 'antd'
-import Surah from './data.json'
+import { Checkbox } from 'antd'
+import { useParams } from 'react-router-dom'
 import CreateWord from './CreateWord'
 
-const { Option } = Select
-class CardsBasicCards extends React.Component {
-  constructor(props) {
+export default class CardsBasicCards extends React.Component {
+  constructor({ props }) {
     super(props)
     this.state = {
-      selectValue: 'Choose Surah',
+      projectData: undefined,
       checked: false,
     }
     this.word_key = -1
+    console.log('Constructor')
+    console.log(useParams)
   }
 
-  onChange = e => {
-    this.setState({
-      selectValue: e,
-    })
+  componentDidMount() {
+    console.log(this.props)
+
+    const {
+      location: { state: { projectID } = { projectID: undefined } },
+    } = this.props
+
+    if (projectID !== undefined)
+      fetch(`http://localhost:5000/API/get_project?project_id=${projectID}`)
+        .then(res => res.json())
+        .then(res => {
+          this.setState({
+            projectData: res[0],
+          })
+          console.log(res)
+        })
   }
 
   handleCheckClick = () => {
@@ -30,8 +43,14 @@ class CardsBasicCards extends React.Component {
   }
 
   render() {
-    const { selectValue, checked } = this.state
-
+    const {
+      projectData: { chosenEntities, surahNumber, _id: { $oid } = { $oid: null } } = {
+        surah_number: null,
+      },
+      checked,
+    } = this.state
+    const { projectData } = this.state
+    console.log(`projectData: ${projectData}`)
     return (
       <div>
         <Helmet title="Al Quran" />
@@ -44,28 +63,17 @@ class CardsBasicCards extends React.Component {
           <div className="col-lg-12">
             <div className="card">
               <div className="card-header card-header-flex align-items-center">
-                <div className="d-flex flex-column justify-content-center mr-auto">
-                  <div className="mb-0 width-300">
-                    <Select
-                      defaultValue={selectValue}
-                      onChange={this.onChange}
-                      style={{ width: 300 }}
-                    >
-                      {Surah.map(data => {
-                        return (
-                          <Option key={data.surahNumber} value={data.surahNumber}>
-                            {`${data.surahNumber} - ${data.surahName}`}
-                          </Option>
-                        )
-                      })}
-                    </Select>
-                  </div>
-                </div>
                 <Checkbox checked={checked} onClick={this.handleCheckClick}>
                   Show Suggestion
                 </Checkbox>
               </div>
-              <CreateWord getSurah={checked ? 'get_suggest' : 'get_surah'} noSurah={selectValue} />
+              <CreateWord
+                projectID={$oid}
+                showSuggestions={checked}
+                chosenEntities={chosenEntities}
+                getSurah={checked ? 'get_suggest' : 'get_surah'}
+                noSurah={surahNumber}
+              />
             </div>
           </div>
         </div>
@@ -73,5 +81,3 @@ class CardsBasicCards extends React.Component {
     )
   }
 }
-
-export default CardsBasicCards

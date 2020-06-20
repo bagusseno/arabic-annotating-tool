@@ -12,10 +12,19 @@
           ".js",
           ".jsx"
         ]
-      }
+      },
     ],
+    "import/extensions": ["error", "ignorePackages", {
+      "js": "never",
+      "jsx": "never",
+      "ts": "never",
+      "tsx": "never",
+      "mjs": "never",
+      "": "never"
+    }],
     "no-useless-escape": "off",
     "no-script-url": "off",
+    "no-underscore-dangle": 0,
     "jsx-a11y/anchor-has-content": "off",
     "jsx-a11y/href-no-hash": "off",
     "jsx-a11y/anchor-is-valid": "off",

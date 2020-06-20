@@ -26,15 +26,19 @@ class ButtonMethod extends React.Component {
     this.setState({ legend: leg })
   }
 
+  onClick = () => {
+    if (this.click) this.click()
+    if (this.link) this.setRedirect()
+  }
+
   setTextInputRef(element) {
     this.myRef = element
   }
 
   setRedirect = () => {
-    if (!this.link)
-      this.setState({
-        redirect: true,
-      })
+    this.setState({
+      redirect: true,
+    })
   }
 
   renderRedirect = () => {
@@ -72,13 +76,7 @@ class ButtonMethod extends React.Component {
     }
 
     return (
-      <div
-        className="col-lg-6 col-lg-12"
-        tabIndex="0"
-        role="button"
-        onKeyDown={this.setRedirect}
-        onClick={this.setRedirect}
-      >
+      <div className="col-lg-6 col-lg-12" tabIndex="0" role="button">
         {this.renderRedirect()}
         <div
           className={`card ${this.cardEffect}`}
@@ -87,8 +85,8 @@ class ButtonMethod extends React.Component {
         >
           <div
             className="card-body"
-            onClick={this.click}
-            onKeyDown={this.click}
+            onClick={this.onClick}
+            onKeyDown={this.onClick}
             role="button"
             tabIndex="0"
           >

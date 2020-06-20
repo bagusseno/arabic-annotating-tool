@@ -1,46 +1,106 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import ButtonMethod from 'components/widgets/Buttons/Method'
-import { Modal } from 'antd'
+import { Modal, Input, Select, Form, Button } from 'antd'
+import { Redirect } from 'react-router-dom'
 import Data from './data.json'
+import Surah from './surah.json'
 // import Method from './method'
 
 class Create extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      visible: false,
+      modal1IsVisible: false,
+      modal2IsVisible: false,
+      annotator: '',
+      redirect: false,
+      projectID: '',
+      surah: 'Choose Surah',
     }
   }
 
-  showModal = () => {
+  showModal1 = () => {
     this.setState({
-      visible: true,
+      modal1IsVisible: true,
+      modal2IsVisible: false,
+    })
+  }
+
+  showModal2 = () => {
+    this.setState({
+      modal2IsVisible: true,
+      modal1IsVisible: false,
     })
   }
 
   handleOk = e => {
     console.log(e)
     this.setState({
-      visible: false,
+      modal1IsVisible: false,
+      modal2IsVisible: false,
     })
   }
 
   handleCancel = e => {
     console.log(e)
     this.setState({
-      visible: false,
+      modal1IsVisible: false,
+      modal2IsVisible: false,
+    })
+  }
+
+  handleChange = surah => {
+    this.setState({
+      surah,
+    })
+  }
+
+  handleChangeAnnotator = event => {
+    this.setState({
+      annotator: event.target.value,
     })
   }
 
   createNewProject = () => {
-    fetch('http://localhost:5000/').then(res => res.json())
+    const { surah, annotator } = this.state
+    fetch(
+      `http://localhost:5000/API/new_project?project_type=rb&project_annotator=${annotator}&surah_number=${surah}`,
+    )
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          redirect: true,
+          projectID: res.$oid,
+        })
+      })
+  }
+
+  renderRedirect = () => {
+    const { redirect } = this.state
+    const { projectID } = this.state
+
+    if (redirect)
+      return (
+        <Redirect
+          projectID={projectID}
+          to={{
+            pathname: '/cards/basic-cards',
+            state: {
+              projectID,
+            },
+          }}
+        />
+      )
+
+    return <></>
   }
 
   render() {
-    const { visible } = this.state
+    const { modal1IsVisible, modal2IsVisible, surah, annotator } = this.state
     return (
       <div>
+        {this.renderRedirect()}
         <Helmet title="Dashboard: Analytics" />
         <div className="air__utils__heading">
           <h5>Create New Projects</h5>
@@ -53,11 +113,11 @@ class Create extends React.Component {
                 projectName="New Custom Project"
                 projectImage="resources/images/projects/new-project.png"
                 methodName="Create a New Custom labeling project"
-                click={this.showModal}
+                click={this.showModal1}
               />
               <Modal
-                title="Basic Modal"
-                visible={visible}
+                title="Select Algorithm"
+                visible={modal1IsVisible}
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}
               >
@@ -67,12 +127,47 @@ class Create extends React.Component {
                       projectName={data.projectName}
                       projectImage={data.projectImage}
                       methodName={data.methodName}
-                      link={data.link}
-                      click={this.createNewProject}
+                      click={this.showModal2}
                       key={data.id}
                     />
                   )
                 })}
+              </Modal>
+              <Modal
+                title="Input Data"
+                visible={modal2IsVisible}
+                onOk={this.handleOk}
+                onCancel={this.handleCancel}
+                footer={[
+                  <Button key="back" onClick={this.showModal1}>
+                    Back
+                  </Button>,
+                  <Button key="submit" type="primary" onClick={this.createNewProject}>
+                    Submit
+                  </Button>,
+                ]}
+              >
+                <Form
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 16 }}
+                  layout="vertical"
+                  visible={modal2IsVisible}
+                >
+                  <Form.Item label="Annotator Name">
+                    <Input value={annotator} onChange={this.handleChangeAnnotator} />
+                  </Form.Item>
+                  <Form.Item label="Select Surah">
+                    <Select onChange={this.handleChange} defaultValue={surah}>
+                      {Surah.map(data => {
+                        return (
+                          <Select.Option key={data.surahNumber} value={data.surahNumber}>
+                            {`${data.surahNumber} - ${data.surahName}`}
+                          </Select.Option>
+                        )
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Form>
               </Modal>
             </div>
           </div>

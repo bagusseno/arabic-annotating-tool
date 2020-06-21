@@ -274,10 +274,10 @@ export default class CreateWord extends Component {
             tabIndex="-1"
             type="primary"
             className="mb-3 ml-3 col-md-1"
-            style={{
-              background: '#786fa4',
-              borderColor: '#786fa4',
-            }}
+            // style={{
+            //   background: '#786fa4',
+            //   borderColor: '#786fa4',
+            // }}
           >
             Annotate
           </Button>

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask import request
 from flask_cors import CORS
 from flask_pymongo import PyMongo, ObjectId
@@ -11,7 +11,7 @@ import os
 from arabic_entity_classifier_using_pattern import classify, classify_suggest
 
 app = Flask(__name__)
-app.config['MONGO_URI'] = "mongodb://127.0.0.1:27017/TA"
+app.config['MONGO_URI'] = "mongodb://127.0.0.1:27017/annotation_tool"
 
 mongo = PyMongo(app)
 cors = CORS(app)
@@ -25,7 +25,7 @@ def get_surah(surah_number):
     patterns = list(map(pattern_to_array, list(mongo.db.patterns.find())))
     surah = list(mongo.db.quran.find({'SURAH_NUMBER' : str(surah_number)}))
 
-    classified_surah = dumps(classify_suggest(patterns, surah))
+    classified_surah = jsonify(classify_suggest(patterns, surah))
 
     return classified_surah
 

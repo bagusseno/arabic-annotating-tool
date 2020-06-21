@@ -12,12 +12,5 @@
         "methodName": "Create a Hidden Markov Model labeling project.",
         "link": "#",
         "id": 2
-    },
-    {
-        "projectName": "New CRF Project",
-        "projectImage": "resources/images/projects/crf-project.png",
-        "methodName": "Create a Conditional Random Fields labeling project.",
-        "link": "#",
-        "id": 3
     }
 ]

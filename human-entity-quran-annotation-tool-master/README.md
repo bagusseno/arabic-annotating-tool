@@ -22,9 +22,9 @@ Langkah-langkah dalam menginstallnya sebagai berikut :
 ```
 git clone https://github.com/abuabdirohman4/human-entity-quran-annotation-tool.git
 ```
-2. Install node_module, react text annotate dan react powerplug dengan yarn
+2. Install node_module dengan yarn
 ```
-yarn install react-text-annotation react powerplug
+yarn install
 ```
 3. Membuat Environment
 * Masuklah pada folder flask
@@ -35,12 +35,16 @@ cd flask
 ```
 python3 -m venv venv
 ```
+* Dan aktivasi virtual environment
+```
+source venv/bin/activate
+```
 4. Install Requirement Flask
 * Masih di dalam folder flask, install requirement untuk flask
 ```
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
-4. Import Database
+5. Import Database
 * Untuk proses import, saya menyarankan menggunakan [MongoDB Compass](https://www.mongodb.com/products/compass) (GUI untuk mongoDB)
 * Buatlah database dengan nama _annotation_tool_
 * Buat juga 2 collection dengan nama _quran_ dan _patterns_

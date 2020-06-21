@@ -8,28 +8,19 @@ export default async function getMenuData() {
         {
           title: 'Create New Projects',
           key: 'Create',
-          url: '/projects/create',
+          url: '/create',
         },
         {
           title: 'Open Recent Projects',
           key: 'Recent',
-          url: '/projects/recent',
+          url: '/recent',
         },
-        // {
-        //   title: 'Edit Projects',
-        //   key: 'Edit',
-        //   url: '/projects/edit',
-        // },
         {
           title: 'Edit Projects',
-          key: 'CardsBasicCards',
-          url: '/cards/basic-cards',
+          key: 'Edit',
+          url: '/edit',
         },
       ],
     },
-    // {
-    //   key: 'Method',
-    //   url: '/projects/create/method',
-    // },
   ]
 }

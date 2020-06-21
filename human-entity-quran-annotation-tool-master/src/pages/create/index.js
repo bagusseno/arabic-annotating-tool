@@ -5,7 +5,6 @@ import { Modal, Input, Select, Form, Button } from 'antd'
 import { Redirect } from 'react-router-dom'
 import Data from './data.json'
 import Surah from './surah.json'
-// import Method from './method'
 
 class Create extends React.Component {
   constructor(props) {
@@ -16,7 +15,7 @@ class Create extends React.Component {
       annotator: '',
       redirect: false,
       projectID: '',
-      surah: 'Choose Surah',
+      surah: 'Select Surah',
     }
   }
 
@@ -65,7 +64,7 @@ class Create extends React.Component {
   createNewProject = () => {
     const { surah, annotator } = this.state
     fetch(
-      `http://localhost:5000/API/new_project?project_type=rb&project_annotator=${annotator}&surah_number=${surah}`,
+      `http://localhost:5000/API/new_project?project_type=RB&project_annotator=${annotator}&surah_number=${surah}`,
     )
       .then(res => res.json())
       .then(res => {
@@ -85,7 +84,7 @@ class Create extends React.Component {
         <Redirect
           projectID={projectID}
           to={{
-            pathname: '/cards/basic-cards',
+            pathname: '/edit',
             state: {
               projectID,
             },
@@ -120,6 +119,7 @@ class Create extends React.Component {
                 visible={modal1IsVisible}
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}
+                footer={null}
               >
                 {Data.map(data => {
                   return (
@@ -143,7 +143,7 @@ class Create extends React.Component {
                     Back
                   </Button>,
                   <Button key="submit" type="primary" onClick={this.createNewProject}>
-                    Submit
+                    Create Project
                   </Button>,
                 ]}
               >
@@ -156,7 +156,7 @@ class Create extends React.Component {
                   <Form.Item label="Annotator Name">
                     <Input value={annotator} onChange={this.handleChangeAnnotator} />
                   </Form.Item>
-                  <Form.Item label="Select Surah">
+                  <Form.Item label="Surah">
                     <Select onChange={this.handleChange} defaultValue={surah}>
                       {Surah.map(data => {
                         return (

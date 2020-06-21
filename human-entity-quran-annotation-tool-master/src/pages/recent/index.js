@@ -10,9 +10,9 @@ class Recent extends React.Component {
         <div className="air__utils__heading">
           <h5>
             <span className="mr-3">Open Recent Projects</span>
-            <a className="btn btn-sm btn-light">
+            {/* <a className="btn btn-sm btn-light">
               <i className="fe fe-corner-right-up" />
-            </a>
+            </a> */}
           </h5>
         </div>
         <div className="card">

@@ -1,10 +1,10 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import { Checkbox } from 'antd'
-import { useParams } from 'react-router-dom'
+import { Checkbox, Button } from 'antd'
+import { useParams, Link } from 'react-router-dom'
 import CreateWord from './CreateWord'
 
-export default class CardsBasicCards extends React.Component {
+export default class Edit extends React.Component {
   constructor({ props }) {
     super(props)
     this.state = {
@@ -74,6 +74,13 @@ export default class CardsBasicCards extends React.Component {
                 getSurah={checked ? 'get_suggest' : 'get_surah'}
                 noSurah={surahNumber}
               />
+            </div>
+            <div className="text-right">
+              <Link to="../recent">
+                <Button type="primary" className="col-md-12">
+                  Save Projects
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

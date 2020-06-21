@@ -2,6 +2,7 @@
 import React from 'react'
 import { Table, Divider, Tag } from 'antd'
 import { Link } from 'react-router-dom'
+import SurahJson from './surah.json'
 
 const columns = [
   {
@@ -11,16 +12,17 @@ const columns = [
     render: text => <a href="javascript:;">{text}</a>,
   },
   {
-    title: 'Labelers',
+    title: 'Annotator Name',
     key: 'labelers',
     dataIndex: 'labelers',
     render: tags => (
       <span>
         {tags.map(tag => {
-          let color = tag.length > 5 ? 'geekblue' : 'green'
-          if (tag === 'loser') {
-            color = 'volcano'
-          }
+          // let color = tag.length > 5 ? 'geekblue' : 'green'
+          // if (tag === 'loser') {
+          //   color = 'volcano'
+          // }
+          const color = 'geekblue'
           return (
             <Tag color={color} key={tag}>
               {tag.toUpperCase()}
@@ -31,11 +33,30 @@ const columns = [
     ),
   },
   {
-    title: 'Surah number',
+    title: 'Surah',
     key: 'surahNumber',
     dataIndex: 'surahNumber',
     render: surah => {
-      return <span>{surah}</span>
+      return (
+        <>
+          {SurahJson.map(data => {
+            let name = null
+            let number = null
+            const strip = ' - '
+            if (data.surahNumber === surah) {
+              name = data.surahName
+              number = data.surahNumber.concat(strip)
+            }
+            return (
+              <span>
+                {number}
+                {name}
+              </span>
+            )
+          })}
+          {/* <span>{surah}</span> */}
+        </>
+      )
     },
   },
   {
@@ -48,7 +69,7 @@ const columns = [
         <span>
           <Link
             to={{
-              pathname: '/cards/basic-cards',
+              pathname: '/edit',
               state: {
                 projectID,
               },

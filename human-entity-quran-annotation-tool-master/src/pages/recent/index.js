@@ -1,12 +1,12 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import Table from './table'
+import Table from './table/index'
 
 class Recent extends React.Component {
   render() {
     return (
       <div>
-        <Helmet title="Tables: Antd" />
+        <Helmet title="Recent Projects" />
         <div className="air__utils__heading">
           <h5>
             <span className="mr-3">Open Recent Projects</span>
@@ -18,7 +18,7 @@ class Recent extends React.Component {
         <div className="card">
           <div className="card-body">
             <h4 className="mb-4">
-              <strong>Your Recent Project</strong>
+              <strong>Your Recent Projects</strong>
             </h4>
             <Table />
           </div>

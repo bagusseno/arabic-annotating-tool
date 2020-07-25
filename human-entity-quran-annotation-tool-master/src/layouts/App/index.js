@@ -9,7 +9,7 @@ import MenuLeft from 'components/layout/MenuLeft'
 import MenuTop from 'components/layout/MenuTop'
 import Footer from 'components/layout/Footer'
 import Sidebar from 'components/layout/Sidebar'
-import SupportChat from 'components/layout/SupportChat'
+// import SupportChat from 'components/layout/SupportChat'
 
 const mapStateToProps = ({ settings }) => ({ settings })
 
@@ -44,7 +44,7 @@ class AppLayout extends React.PureComponent {
         })}
       >
         <Sidebar />
-        <SupportChat />
+        {/* <SupportChat /> */}
         {menuLayoutType === 'left' && <MenuLeft />}
         {menuLayoutType === 'top' && <MenuTop />}
         <Layout>

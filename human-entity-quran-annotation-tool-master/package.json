@@ -30,6 +30,7 @@
     ]
   },
   "dependencies": {
+    "@ant-design/icons": "^4.2.1",
     "antd": "^3.19.6",
     "bootstrap-css-only": "^4.3.1",
     "chart.js": "^2.8.0",

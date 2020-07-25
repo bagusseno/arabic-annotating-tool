@@ -3,14 +3,14 @@
         "projectName": "New RB Project",
         "projectImage": "resources/images/projects/rb-project.png",
         "methodName": "Create a Rule Based labeling project.",
-        "link":"/cards/basic-cards",
+        "avaiable":"true",
         "id": 1
     },
     {
         "projectName": "New HMM Project",
         "projectImage": "resources/images/projects/hmm-project.png",
         "methodName": "Create a Hidden Markov Model labeling project.",
-        "link": "#",
+        "avaiable": "false",
         "id": 2
     }
 ]

@@ -387,14 +387,14 @@ class Sidebar extends React.Component {
             </div>
           </Scrollbars>
         </div>
-        <a
+        {/* <a
           href="#"
           onClick={this.toggleSettings}
           className={`${style.air__sidebar__toggleButton} btn btn-rounded btn-light text-nowrap text-dark font-weight-bold font-size-18`}
         >
           <i className="fe fe-settings text-blue mr-md-2" />
           <span className="d-none d-md-inline">Settings</span>
-        </a>
+        </a> */}
       </div>
     )
   }

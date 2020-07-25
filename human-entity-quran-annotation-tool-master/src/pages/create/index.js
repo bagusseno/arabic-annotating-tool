@@ -10,8 +10,8 @@ class Create extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      modal1IsVisible: false,
-      modal2IsVisible: false,
+      modalMethodIsVisible: false,
+      modalInputIsVisible: false,
       annotator: '',
       redirect: false,
       projectID: '',
@@ -19,33 +19,33 @@ class Create extends React.Component {
     }
   }
 
-  showModal1 = () => {
+  showModalMethod = () => {
     this.setState({
-      modal1IsVisible: true,
-      modal2IsVisible: false,
+      modalMethodIsVisible: true,
+      modalInputIsVisible: false,
     })
   }
 
-  showModal2 = () => {
+  showModalInput = () => {
     this.setState({
-      modal2IsVisible: true,
-      modal1IsVisible: false,
+      modalInputIsVisible: true,
+      modalMethodIsVisible: false,
     })
   }
 
   handleOk = e => {
     console.log(e)
     this.setState({
-      modal1IsVisible: false,
-      modal2IsVisible: false,
+      modalMethodIsVisible: false,
+      modalInputIsVisible: false,
     })
   }
 
   handleCancel = e => {
     console.log(e)
     this.setState({
-      modal1IsVisible: false,
-      modal2IsVisible: false,
+      modalMethodIsVisible: false,
+      modalInputIsVisible: false,
     })
   }
 
@@ -96,11 +96,11 @@ class Create extends React.Component {
   }
 
   render() {
-    const { modal1IsVisible, modal2IsVisible, surah, annotator } = this.state
+    const { modalMethodIsVisible, modalInputIsVisible, surah, annotator } = this.state
     return (
       <div>
         {this.renderRedirect()}
-        <Helmet title="Dashboard: Analytics" />
+        <Helmet title="Create Projects" />
         <div className="air__utils__heading">
           <h5>Create New Projects</h5>
         </div>
@@ -112,11 +112,11 @@ class Create extends React.Component {
                 projectName="New Custom Project"
                 projectImage="resources/images/projects/new-project.png"
                 methodName="Create a New Custom labeling project"
-                click={this.showModal1}
+                click={this.showModalMethod}
               />
               <Modal
-                title="Select Algorithm"
-                visible={modal1IsVisible}
+                title="Select Method"
+                visible={modalMethodIsVisible}
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}
                 footer={null}
@@ -127,7 +127,7 @@ class Create extends React.Component {
                       projectName={data.projectName}
                       projectImage={data.projectImage}
                       methodName={data.methodName}
-                      click={this.showModal2}
+                      click={data.avaiable === 'true' ? this.showModalInput : this.showModalMethod}
                       key={data.id}
                     />
                   )
@@ -135,11 +135,11 @@ class Create extends React.Component {
               </Modal>
               <Modal
                 title="Input Data"
-                visible={modal2IsVisible}
+                visible={modalInputIsVisible}
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}
                 footer={[
-                  <Button key="back" onClick={this.showModal1}>
+                  <Button key="back" onClick={this.showModalMethod}>
                     Back
                   </Button>,
                   <Button key="submit" type="primary" onClick={this.createNewProject}>
@@ -151,7 +151,7 @@ class Create extends React.Component {
                   labelCol={{ span: 6 }}
                   wrapperCol={{ span: 16 }}
                   layout="vertical"
-                  visible={modal2IsVisible}
+                  visible={modalInputIsVisible}
                 >
                   <Form.Item label="Annotator Name">
                     <Input value={annotator} onChange={this.handleChangeAnnotator} />

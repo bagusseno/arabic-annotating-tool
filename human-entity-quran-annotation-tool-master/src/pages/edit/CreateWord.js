@@ -4,23 +4,35 @@ import Word from 'components/quran/Word'
 import _ from 'lodash'
 
 const API = 'http://localhost:5000/API/get_surah/'
-
+const tagColor = {
+  Human: 'blue',
+  Location: 'red',
+}
 export default class CreateWord extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      words: [],
       currentSelectedWords: [],
       chosenEntities: [],
-      isMouseDown: false,
       entitySuggestions: [],
+      isMouseDown: false,
+      tag: props.tagName,
+      words: [],
+      isDelete: true,
+      deleteEntities: '',
+      deleteText: 'Delete',
     }
-    this.word_key = -1
     this.noSurah = props.noSurah
+    this.tagName = props.tagName
+    this.word_key = -1
   }
 
   componentDidUpdate(prevProps) {
-    const { noSurah, chosenEntities } = this.props
+    const { noSurah, chosenEntities, tagName } = this.props
+
+    if (tagName !== prevProps.tagName) {
+      this.updateTag(tagName)
+    }
 
     if (noSurah !== prevProps.noSurah) {
       fetch(API + noSurah)
@@ -46,6 +58,13 @@ export default class CreateWord extends Component {
     }
   }
 
+  updateTag = tag => {
+    this.setState({
+      tag,
+    })
+  }
+
+  // Give space between word
   setupWords = () => {
     const { words } = this.state
 
@@ -84,34 +103,96 @@ export default class CreateWord extends Component {
     this.setState({ entitySuggestions })
   }
 
-  setMouseDownStatus = status => {
-    console.log('setMouseDownStatus called')
-
+  handleDeleteEntities = () => {
+    const { isDelete } = this.state
     this.setState({
-      isMouseDown: status,
+      isDelete: !isDelete,
     })
-
-    if (status) this.resetWords()
+    this.showDeleteEntities()
   }
 
-  setWordColor = (index, color) => {
-    const { words } = this.state
-    const wordsCopy = words.slice()
+  showDeleteEntities = () => {
+    const { isDelete } = this.state
+    if (isDelete) {
+      this.setState({
+        // deleteEntities: `<sup><i class="fa fa-times-circle-o" style="font-size: 14px; color:${tagColor[tagName]};"></i></sup>`
+        deleteEntities:
+          '<sup><i class="fa fa-times-circle" style="cursor: pointer; font-size: 14px; color:red;"></i></sup>',
+        deleteText: 'Cancel Delete',
+      })
+    } else {
+      this.setState({
+        deleteEntities: '',
+        deleteText: 'Delete',
+      })
+    }
+  }
 
-    wordsCopy[index].COLOR = color
+  createWords = () => {
+    const { words, chosenEntities, entitySuggestions, deleteEntities } = this.state
+    // const { words, chosenEntities, entitySuggestions } = this.state
+    const { showSuggestions, tagName } = this.props
+    // const delete = '<sup><i class="fa fa-times-circle-o" style="font-size: 14px; color:${e.tagColor};"></i></sup>'
+    // const select = '<sup><i class="fa fa-check-circle-o" style="font-size: 14px; color:green;"></i></sup>'
 
-    this.setState({
-      words: wordsCopy,
+    if (words.length === 0) return ''
+
+    const wordsToPrint = _.cloneDeep(words)
+
+    if (chosenEntities !== '')
+      chosenEntities.forEach(e => {
+        // wordsToPrint[
+        //   e.start
+        // ].ARAB = `<sup><i class="fa fa-times-circle-o" style="font-size: 14px; color:${e.tagColor};"></i></sup><font color=${e.tagColor}>(</font>${wordsToPrint[e.start].ARAB}`
+        wordsToPrint[
+          e.start
+        ].ARAB = `${deleteEntities}<font color=${e.tagColor}>(</font>${wordsToPrint[e.start].ARAB}`
+        // `<span class='supsub'><sup class='superscript'>Sup</sup><sub class='subscript'>Sub</sub></span><font color=${e.tagColor}>(</font>${wordsToPrint[e.start].ARAB}`
+
+        wordsToPrint[e.end].ARAB = `${wordsToPrint[e.end].ARAB}<font color=${e.tagColor}>)</font>`
+      })
+
+    if (showSuggestions)
+      entitySuggestions.forEach(e => {
+        if (
+          chosenEntities.find(e2 => e2.start === e.start) &&
+          chosenEntities.find(e2 => e2.end === e.end)
+        )
+          return
+
+        console.log('${tagColor[tagName]} :', tagColor[tagName])
+        wordsToPrint[e.start].ARAB =
+          // `<sup><i class="fa fa-check-circle-o" style="font-size: 14px; color:green;"></i></sup><font color=${tagColor[tagName]}>(</font>${wordsToPrint[e.start].ARAB}`
+          `<sup><i class="fa fa-plus-circle" style="cursor: pointer; font-size: 14px; color:green; position: relative; top:-4px; left:-12px"></i></sup><sub><i class="fa fa-times-circle" style="cursor: pointer; font-size: 14px; color:red;"></i></sub><font color=${tagColor[tagName]}>(</font>${wordsToPrint[e.start].ARAB}`
+
+        wordsToPrint[e.end].ARAB =
+          // `${wordsToPrint[e.end].ARAB}<font color=${tagColor[tagName]}>)</font><sup><i class="fa fa-times-circle-o" style="font-size: 14px; color:green;"></i></sup>`
+          `${wordsToPrint[e.end].ARAB}<font color=${tagColor[tagName]}>)</font>`
+      })
+
+    return wordsToPrint.map((word, k) => {
+      word.INDEX = k
+      return this.createWord(word)
     })
   }
 
-  addWordToSelected = index => {
-    const { currentSelectedWords } = this.state
-    const newcurrentSelectedWords = currentSelectedWords.slice()
-    newcurrentSelectedWords.push(index)
-    this.setState({
-      currentSelectedWords: newcurrentSelectedWords,
-    })
+  createWord = word => {
+    const { isMouseDown } = this.state
+    this.word_key += 1
+
+    return (
+      <Word
+        value={word.ARAB}
+        color={word.COLOR}
+        validateNewIndex={this.validateNewIndex}
+        addWordToSelected={this.addWordToSelected}
+        setMouseDownStatus={this.setMouseDownStatus}
+        setWordColor={this.setWordColor}
+        index={word.INDEX}
+        key={this.word_key}
+        isMouseDown={isMouseDown}
+      />
+    )
   }
 
   validateNewIndex = index => {
@@ -132,15 +213,30 @@ export default class CreateWord extends Component {
     return true
   }
 
+  addWordToSelected = index => {
+    const { currentSelectedWords } = this.state
+    const newcurrentSelectedWords = currentSelectedWords.slice()
+    newcurrentSelectedWords.push(index)
+    this.setState({
+      currentSelectedWords: newcurrentSelectedWords,
+    })
+  }
+
+  setMouseDownStatus = status => {
+    this.setState({
+      isMouseDown: status,
+    })
+
+    if (status) this.resetWords()
+  }
+
   resetWords = () => {
-    const { words, entitySuggestions } = this.state
+    const { words } = this.state
     const wordsCopy = words.slice()
 
     wordsCopy.forEach(word => {
       word.COLOR = ''
     })
-
-    console.log(entitySuggestions)
 
     this.setState({
       words: wordsCopy,
@@ -148,16 +244,30 @@ export default class CreateWord extends Component {
     })
   }
 
+  setWordColor = index => {
+    const { words, tag } = this.state
+    const wordsCopy = words.slice()
+
+    wordsCopy[index].COLOR = tagColor[tag]
+
+    this.setState({
+      words: wordsCopy,
+    })
+  }
+
   annotate = () => {
     const { currentSelectedWords, chosenEntities } = this.state
+    const { tagName } = this.props
 
     if (currentSelectedWords.length === 0) return
 
     const newChosenEntities = _.cloneDeep(chosenEntities)
 
     newChosenEntities.push({
-      start: Math.min.apply(null, currentSelectedWords),
-      end: Math.max.apply(null, currentSelectedWords) + 1,
+      start: Math.min.apply(null, currentSelectedWords) - 1,
+      end: Math.max.apply(null, currentSelectedWords),
+      tagName,
+      tagColor: tagColor[tagName],
     })
 
     this.setState(
@@ -189,70 +299,21 @@ export default class CreateWord extends Component {
     })
   }
 
-  createWord = word => {
-    const { isMouseDown } = this.state
-    this.word_key += 1
-
-    return (
-      <Word
-        value={word.ARAB}
-        color={word.COLOR}
-        validateNewIndex={this.validateNewIndex}
-        addWordToSelected={this.addWordToSelected}
-        setMouseDownStatus={this.setMouseDownStatus}
-        setWordColor={this.setWordColor}
-        index={word.INDEX}
-        key={this.word_key}
-        isMouseDown={isMouseDown}
-      />
-    )
-  }
-
-  createWords = () => {
-    const { words, chosenEntities, entitySuggestions } = this.state
+  handleChangeButtonSuggest = () => {
     const { showSuggestions } = this.props
 
-    if (words.length === 0) return ''
-
-    const wordsToPrint = _.cloneDeep(words)
-
-    if (chosenEntities !== '')
-      chosenEntities.forEach((e, k) => {
-        wordsToPrint[e.start].ARAB = `<font color=red>${k.toString().sup()}(</font>${
-          wordsToPrint[e.start].ARAB
-        }`
-        wordsToPrint[e.end].ARAB = `${
-          wordsToPrint[e.end].ARAB
-        }<font color=red>)${k.toString().sup()}</font>`
-      })
-
-    if (showSuggestions)
-      entitySuggestions.forEach((e, k) => {
-        if (
-          chosenEntities.find(e2 => e2.start === e.start) &&
-          chosenEntities.find(e2 => e2.end === e.end)
-        )
-          return
-
-        wordsToPrint[e.start].ARAB = `<font color=green>${k.toString().sup()}(</font>${
-          wordsToPrint[e.start].ARAB
-        }`
-        wordsToPrint[e.end].ARAB = `${
-          wordsToPrint[e.end].ARAB
-        }<font color=green>)${k.toString().sup()}</font>`
-      })
-
-    console.log(wordsToPrint)
-
-    return wordsToPrint.map((word, k) => {
-      // word.COLOR = 'green'
-      word.INDEX = k
-
-      return this.createWord(word)
-    })
+    if (showSuggestions) {
+      return ''
+    }
+    return 'none'
   }
 
   render() {
+    const divStyle = {
+      display: this.handleChangeButtonSuggest(),
+    }
+    const { deleteText } = this.state
+
     return (
       <>
         <div
@@ -268,21 +329,22 @@ export default class CreateWord extends Component {
           {this.createWords()}
         </div>
         <div className="text-center">
+          <Button className="mb-3 ml-3" type="primary" style={divStyle}>
+            Annotate All Suggestion
+          </Button>
+
           <Button
             onClick={this.annotate}
             onKeyDown={this.annotate}
             tabIndex="-1"
             type="primary"
-            className="mb-3 ml-3 col-md-1"
-            // style={{
-            //   background: '#786fa4',
-            //   borderColor: '#786fa4',
-            // }}
+            className="mb-3 ml-3"
           >
             Annotate
           </Button>
-          <Button onClick={this.resetWords} tabIndex="-1" className="ml-2">
-            Clear
+
+          <Button className="mb-3 ml-3" onClick={this.handleDeleteEntities}>
+            {deleteText}
           </Button>
         </div>
       </>

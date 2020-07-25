@@ -73,8 +73,8 @@ def classify_suggest(patterns, ayats):
                     # print('found')
                     ayat[wordIndex]['OPEN TAG'] += str(entityIndex) + '('
                     ayat[wordIndex+patternLength]['CLOSE TAG'] += ')' + str(entityIndex) 
-                    # ayat[wordIndex]['OPEN TAG'] += '('
-                    # ayat[wordIndex+patternLength]['CLOSE TAG'] += ')'
+                    # ayat[wordIndex]['OPEN TAG'] += "("
+                    # ayat[wordIndex+patternLength]['CLOSE TAG'] += ")"
                     entityIndex += 1
         ayatIndex += 1
 

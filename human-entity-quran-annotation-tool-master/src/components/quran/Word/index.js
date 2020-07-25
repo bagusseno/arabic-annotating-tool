@@ -1,17 +1,23 @@
 import React from 'react'
 
+// const tagColor = {
+//   Human: 'blue',
+//   Location: 'red',
+// }
+
 class Word extends React.Component {
   constructor(props) {
     super(props)
+    this.value = props.value
+    this.color = props.color
+    // this.tagName = props.tagName
     this.validateNewIndex = props.validateNewIndex
     this.addWordToSelected = props.addWordToSelected
     this.setMouseDownStatus = props.setMouseDownStatus
-    this.color = props.color
-    this.index = props.index
     this.setWordColor = props.setWordColor
     this.isMouseDown = props.isMouseDown
+    this.index = props.index
     this.getMouseDownStatus = props.getMouseDownStatus
-    this.value = props.value
     this.toggleHover = this.toggleHover.bind(this)
     this.state = {
       ...this.state,
@@ -24,15 +30,6 @@ class Word extends React.Component {
 
   state = {
     isHover: false,
-    // isClicking: false,
-  }
-
-  componentDidMount() {
-    // console.log(`${this.color}`);
-  }
-
-  componentDidUpdate() {
-    // console.log((`${this.color}`));
   }
 
   toggleHover = function toggleHover() {
@@ -48,7 +45,7 @@ class Word extends React.Component {
     const isValid = this.validateNewIndex(this.index)
 
     if (isHover && isMouseDown && isValid) {
-      this.setWordColor(this.index, 'red')
+      this.setWordColor(this.index, this.color)
       this.addWordToSelected(this.index)
     }
   }

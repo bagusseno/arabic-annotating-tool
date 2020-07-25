@@ -17,9 +17,9 @@ const columns = [
     },
   },
   {
-    title: 'Location',
-    dataIndex: 'location',
-    key: 'location',
+    title: '',
+    dataIndex: '',
+    key: '',
     render: text => {
       return (
         <a href="#" className="text-blue">
